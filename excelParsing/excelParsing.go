@@ -23,11 +23,6 @@ func ParsingExcelFile() {
 	}
 	//fmt.Printf("%v\n", stripPrice(rows[2][1]))
 	orders := &Rindfleisch{}
-	for i := 2; i < 5; i++ {
-
-		//		fmt.Printf("%v\n", rows[i][0])
-
-	}
 
 	for i := 2; i < 5; i++ {
 		specificOrder := TypeOfMeat{
