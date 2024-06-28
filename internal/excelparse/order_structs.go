@@ -1,4 +1,4 @@
-package main
+package excelparse
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ type Meat interface {
 }
 
 type TypeOfMeat struct {
-	name       string
-	pricePerKg float64
+	Name       string
+	PricePerKg float64
 }
 
 type Rindfleisch struct {

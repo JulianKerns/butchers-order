@@ -1,4 +1,4 @@
-package main
+package excelparse
 
 import (
 	"errors"
@@ -34,8 +34,8 @@ func ParsingExcelFile() (Rindfleisch, Schwein, SurSchwein, error) {
 			return Rindfleisch{}, Schwein{}, SurSchwein{}, err
 		}
 		specificOrder := TypeOfMeat{
-			name:       stripNameWhitespaces(rows[i][0]),
-			pricePerKg: strippedPrice,
+			Name:       stripNameWhitespaces(rows[i][0]),
+			PricePerKg: strippedPrice,
 		}
 		tableRind.Meats[stripNameWhitespaces(rows[i][0])] = specificOrder
 	}
@@ -47,8 +47,8 @@ func ParsingExcelFile() (Rindfleisch, Schwein, SurSchwein, error) {
 			return Rindfleisch{}, Schwein{}, SurSchwein{}, err
 		}
 		specificOrder := TypeOfMeat{
-			name:       stripNameWhitespaces(rows[i][4]),
-			pricePerKg: strippedPrice,
+			Name:       stripNameWhitespaces(rows[i][4]),
+			PricePerKg: strippedPrice,
 		}
 		tableSchwein.Meats[stripNameWhitespaces(rows[i][4])] = specificOrder
 
@@ -61,8 +61,8 @@ func ParsingExcelFile() (Rindfleisch, Schwein, SurSchwein, error) {
 			return Rindfleisch{}, Schwein{}, SurSchwein{}, err
 		}
 		specificOrder := TypeOfMeat{
-			name:       stripNameWhitespaces(rows[i][4]),
-			pricePerKg: strippedPrice,
+			Name:       stripNameWhitespaces(rows[i][4]),
+			PricePerKg: strippedPrice,
 		}
 		tableSurSchwein.Meats[stripNameWhitespaces(rows[i][4])] = specificOrder
 
