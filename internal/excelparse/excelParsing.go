@@ -9,9 +9,9 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func ParsingExcelFile() (Rindfleisch, Schwein, SurSchwein, error) {
+func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
 	// opening the excel file
-	file, err := excelize.OpenFile("order_list.xlsx", excelize.Options{})
+	file, err := excelize.OpenFile(path, excelize.Options{})
 	if err != nil {
 		fmt.Printf("could not open the Excel file: %v", err)
 	}

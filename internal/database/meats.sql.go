@@ -42,3 +42,173 @@ func (q *Queries) AddingDefaultBeef(ctx context.Context, arg AddingDefaultBeefPa
 	)
 	return i, err
 }
+
+const addingDefaultPork = `-- name: AddingDefaultPork :one
+INSERT INTO pork(id,created_at,updated_at,meatcut,price)
+VALUES($1,$2,$3,$4,$5)
+RETURNING id, created_at, updated_at, meatcut, price, quantitiy
+`
+
+type AddingDefaultPorkParams struct {
+	ID        string
+	CreatedAt string
+	UpdatedAt string
+	Meatcut   string
+	Price     float64
+}
+
+func (q *Queries) AddingDefaultPork(ctx context.Context, arg AddingDefaultPorkParams) (Pork, error) {
+	row := q.db.QueryRowContext(ctx, addingDefaultPork,
+		arg.ID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+		arg.Meatcut,
+		arg.Price,
+	)
+	var i Pork
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Meatcut,
+		&i.Price,
+		&i.Quantitiy,
+	)
+	return i, err
+}
+
+const addingDefaultSaltedPork = `-- name: AddingDefaultSaltedPork :one
+INSERT INTO saltedpork(id,created_at,updated_at,meatcut,price)
+VALUES($1,$2,$3,$4,$5)
+RETURNING id, created_at, updated_at, meatcut, price, quantitiy
+`
+
+type AddingDefaultSaltedPorkParams struct {
+	ID        string
+	CreatedAt string
+	UpdatedAt string
+	Meatcut   string
+	Price     float64
+}
+
+func (q *Queries) AddingDefaultSaltedPork(ctx context.Context, arg AddingDefaultSaltedPorkParams) (Saltedpork, error) {
+	row := q.db.QueryRowContext(ctx, addingDefaultSaltedPork,
+		arg.ID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+		arg.Meatcut,
+		arg.Price,
+	)
+	var i Saltedpork
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Meatcut,
+		&i.Price,
+		&i.Quantitiy,
+	)
+	return i, err
+}
+
+const getAllDefaultBeef = `-- name: GetAllDefaultBeef :many
+SELECT id, created_at, updated_at, meatcut, price, quantitiy FROM beef
+`
+
+func (q *Queries) GetAllDefaultBeef(ctx context.Context) ([]Beef, error) {
+	rows, err := q.db.QueryContext(ctx, getAllDefaultBeef)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Beef
+	for rows.Next() {
+		var i Beef
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Meatcut,
+			&i.Price,
+			&i.Quantitiy,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllDefaultPork = `-- name: GetAllDefaultPork :many
+SELECT id, created_at, updated_at, meatcut, price, quantitiy FROM pork
+`
+
+func (q *Queries) GetAllDefaultPork(ctx context.Context) ([]Pork, error) {
+	rows, err := q.db.QueryContext(ctx, getAllDefaultPork)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Pork
+	for rows.Next() {
+		var i Pork
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Meatcut,
+			&i.Price,
+			&i.Quantitiy,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllDefaultSaltedPork = `-- name: GetAllDefaultSaltedPork :many
+SELECT id, created_at, updated_at, meatcut, price, quantitiy FROM saltedpork
+`
+
+func (q *Queries) GetAllDefaultSaltedPork(ctx context.Context) ([]Saltedpork, error) {
+	rows, err := q.db.QueryContext(ctx, getAllDefaultSaltedPork)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Saltedpork
+	for rows.Next() {
+		var i Saltedpork
+		if err := rows.Scan(
+			&i.ID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Meatcut,
+			&i.Price,
+			&i.Quantitiy,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

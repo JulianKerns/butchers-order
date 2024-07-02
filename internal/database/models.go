@@ -16,3 +16,21 @@ type Beef struct {
 	Price     float64
 	Quantitiy sql.NullFloat64
 }
+
+type Pork struct {
+	ID        string
+	CreatedAt string
+	UpdatedAt string
+	Meatcut   string
+	Price     float64
+	Quantitiy sql.NullFloat64
+}
+
+type Saltedpork struct {
+	ID        string
+	CreatedAt string
+	UpdatedAt string
+	Meatcut   string
+	Price     float64
+	Quantitiy sql.NullFloat64
+}

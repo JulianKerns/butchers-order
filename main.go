@@ -13,7 +13,7 @@ import (
 
 	"github.com/JulianKerns/butchers-order/internal/database"
 	"github.com/JulianKerns/butchers-order/internal/excelparse"
-	"github.com/JulianKerns/butchers-order/internal/handler"
+
 	"github.com/google/uuid"
 
 	_ "github.com/lib/pq"
@@ -61,8 +61,11 @@ func main() {
 	mux := http.NewServeMux()
 
 	// adding the handlers for certain endpoints to the multiplexer
-	mux.HandleFunc("GET /readiness", handler.ReadinessHandler)
-	mux.HandleFunc("GET /errors", handler.ErrorHandler)
+	mux.HandleFunc("GET /readiness", ReadinessHandler)
+	mux.HandleFunc("GET /errors", ErrorHandler)
+
+	//Getting the default table values
+	mux.HandleFunc("GET /default", config.GetAllDefaultTables)
 
 	//Creating th server Struct with the port as adress and the multiplexer as our handler
 	server := &http.Server{
@@ -78,22 +81,56 @@ func main() {
 }
 
 func (cfg *Config) SettingDefaulttablesvalues() {
-	beef, _, _, err := excelparse.ParsingExcelFile()
+	// Getting the data from the excelfile
+	beef, pork, saltedpork, err := excelparse.ParsingExcelFile("internal/excelparse/order_list.xlsx")
 	if err != nil {
 		log.Println("could not parse the excel file")
 		return
 	}
-	for key, value := range beef.Meats {
-		now := time.Now().Format(time.DateTime)
+	now := time.Now().Format(time.DateTime)
+
+	// Setting the beef table
+	for _, value := range beef.Meats {
+
 		_, err := cfg.DB.AddingDefaultBeef(context.Background(), database.AddingDefaultBeefParams{
 			ID:        uuid.NewString(),
 			CreatedAt: now,
 			UpdatedAt: now,
-			Meatcut:   key,
+			Meatcut:   value.Name,
 			Price:     value.PricePerKg,
 		})
 		if err != nil {
-			log.Println("Database error: could not write to the database")
+			log.Printf("Database error: %v\n", err)
+			return
+		}
+	}
+	// Setting the pork table
+	for _, value := range pork.Meats {
+		now := time.Now().Format(time.DateTime)
+		_, err := cfg.DB.AddingDefaultPork(context.Background(), database.AddingDefaultPorkParams{
+			ID:        uuid.NewString(),
+			CreatedAt: now,
+			UpdatedAt: now,
+			Meatcut:   value.Name,
+			Price:     value.PricePerKg,
+		})
+		if err != nil {
+			log.Printf("Database error: %v\n", err)
+			return
+		}
+	}
+	// Setting the saltedpork table
+	for _, value := range saltedpork.Meats {
+		now := time.Now().Format(time.DateTime)
+		_, err := cfg.DB.AddingDefaultSaltedPork(context.Background(), database.AddingDefaultSaltedPorkParams{
+			ID:        uuid.NewString(),
+			CreatedAt: now,
+			UpdatedAt: now,
+			Meatcut:   value.Name,
+			Price:     value.PricePerKg,
+		})
+		if err != nil {
+			log.Printf("Database error: %v\n", err)
 			return
 		}
 	}
