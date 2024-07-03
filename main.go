@@ -82,6 +82,9 @@ func main() {
 	//Getting the default table values
 	mux.HandleFunc("GET /default", handlerConfig.GetAllDefaultTables)
 
+	// Creating a User
+	mux.HandleFunc("POST /users", handlerConfig.HandlerCreateUser)
+
 	//Creating th server Struct with the port as adress and the multiplexer as our handler
 	server := &http.Server{
 		Addr:              ":" + port,

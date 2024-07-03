@@ -34,3 +34,11 @@ type Saltedpork struct {
 	Price     float64
 	Quantitiy sql.NullFloat64
 }
+
+type User struct {
+	ID        string
+	CreatedAt string
+	UpdatedAt string
+	Username  string
+	Email     string
+}
