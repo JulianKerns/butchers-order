@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"github.com/JulianKerns/butchers-order/internal/database"
@@ -31,7 +31,7 @@ type Saltedpork struct {
 	Quantitiy float64 `json:"quantity"`
 }
 
-func databaseBeeftoBeef(beef database.Beef) Beef {
+func DatabaseBeeftoBeef(beef database.Beef) Beef {
 	return Beef{
 		ID:        beef.ID,
 		CreatedAt: beef.CreatedAt,
@@ -43,16 +43,16 @@ func databaseBeeftoBeef(beef database.Beef) Beef {
 
 }
 
-func listDatabaseBeeftoBeef(databaseBeef []database.Beef) []Beef {
+func ListDatabaseBeeftoBeef(databaseBeef []database.Beef) []Beef {
 	var beefList []Beef = make([]Beef, len(databaseBeef))
 
 	for i, item := range databaseBeef {
-		changedStruct := databaseBeeftoBeef(item)
+		changedStruct := DatabaseBeeftoBeef(item)
 		beefList[i] = changedStruct
 	}
 	return beefList
 }
-func databasePorktoPork(pork database.Pork) Pork {
+func DatabasePorktoPork(pork database.Pork) Pork {
 	return Pork{
 		ID:        pork.ID,
 		CreatedAt: pork.CreatedAt,
@@ -64,17 +64,17 @@ func databasePorktoPork(pork database.Pork) Pork {
 
 }
 
-func listDatabasePorktoPork(databasePork []database.Pork) []Pork {
+func ListDatabasePorktoPork(databasePork []database.Pork) []Pork {
 	var porkList []Pork = make([]Pork, len(databasePork))
 
 	for i, item := range databasePork {
-		changedStruct := databasePorktoPork(item)
+		changedStruct := DatabasePorktoPork(item)
 		porkList[i] = changedStruct
 	}
 	return porkList
 }
 
-func databaseSaltedPorktoSaltedPork(saltedPork database.Saltedpork) Saltedpork {
+func DatabaseSaltedPorktoSaltedPork(saltedPork database.Saltedpork) Saltedpork {
 	return Saltedpork{
 		ID:        saltedPork.ID,
 		CreatedAt: saltedPork.CreatedAt,
@@ -86,11 +86,11 @@ func databaseSaltedPorktoSaltedPork(saltedPork database.Saltedpork) Saltedpork {
 
 }
 
-func listDatabaseSaltedPorktoSaltedPork(databaseSaltedPork []database.Saltedpork) []Saltedpork {
+func ListDatabaseSaltedPorktoSaltedPork(databaseSaltedPork []database.Saltedpork) []Saltedpork {
 	var saltedPorkList []Saltedpork = make([]Saltedpork, len(databaseSaltedPork))
 
 	for i, item := range databaseSaltedPork {
-		changedStruct := databaseSaltedPorktoSaltedPork(item)
+		changedStruct := DatabaseSaltedPorktoSaltedPork(item)
 		saltedPorkList[i] = changedStruct
 	}
 	return saltedPorkList

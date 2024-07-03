@@ -1,16 +1,18 @@
-package main
+package handler
 
 import (
 	"log"
 	"net/http"
+
+	"github.com/JulianKerns/butchers-order/models"
 )
 
-func (cfg *Config) GetAllDefaultTables(w http.ResponseWriter, r *http.Request) {
+func (cfg *HandlerConfig) GetAllDefaultTables(w http.ResponseWriter, r *http.Request) {
 	// initializing the ResponseStruct
 	type Response struct {
-		BeefTable       []Beef       `json:"Rindfleisch"`
-		PorkTable       []Pork       `json:"Schwein"`
-		SaltedPorkTable []Saltedpork `json:"Surschwein"`
+		BeefTable       []models.Beef       `json:"Rindfleisch"`
+		PorkTable       []models.Pork       `json:"Schwein"`
+		SaltedPorkTable []models.Saltedpork `json:"Surschwein"`
 	}
 
 	// Getting the Database data
@@ -34,13 +36,13 @@ func (cfg *Config) GetAllDefaultTables(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, "Error retrieving database defaulkt data")
 		return
 	}
-	log.Printf("%v", saltedPorkData)
+
 	// Setting the ResponseStruct
 
 	response := Response{
-		BeefTable:       listDatabaseBeeftoBeef(beefData),
-		PorkTable:       listDatabasePorktoPork(porkData),
-		SaltedPorkTable: listDatabaseSaltedPorktoSaltedPork(saltedPorkData),
+		BeefTable:       models.ListDatabaseBeeftoBeef(beefData),
+		PorkTable:       models.ListDatabasePorktoPork(porkData),
+		SaltedPorkTable: models.ListDatabaseSaltedPorktoSaltedPork(saltedPorkData),
 	}
 
 	respondWithJSON(w, http.StatusOK, response)

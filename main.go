@@ -13,6 +13,7 @@ import (
 
 	"github.com/JulianKerns/butchers-order/internal/database"
 	"github.com/JulianKerns/butchers-order/internal/excelparse"
+	"github.com/JulianKerns/butchers-order/internal/handler"
 
 	"github.com/google/uuid"
 
@@ -41,6 +42,13 @@ func main() {
 		log.Println("Could not retrieve the environment variables")
 		return
 	}
+
+	newDefaultDB := os.Getenv("NEW_DEFAULT")
+	if newDefaultDB == "" {
+		log.Println("Could not retrieve the environment variables")
+		return
+	}
+
 	//Setting up the database connection
 	db, err := sql.Open("postgres", databaseConnection)
 	if err != nil {
@@ -50,22 +58,29 @@ func main() {
 	//setting up the queries for sqlc
 	dbQueries := database.New(db)
 
+	//Setting the GeneralConfig and the handler config to use the same db queries pointer
+	handlerConfig := handler.GetHandlerConfig()
+	handlerConfig.DB = dbQueries
+
 	config := Config{
 		DB: dbQueries,
 	}
-	// Using the Configs DBconnection to insert default values in the table
 
-	config.SettingDefaulttablesvalues()
+	// Using the Configs DBconnection to insert default values in the table
+	if newDefaultDB == "true" {
+		config.SettingDefaulttablesvalues()
+		log.Println("Setting new default table values")
+	}
 
 	// Spinning up a new Multiplexer that handles the requests and directs the traffic to the different handlers
 	mux := http.NewServeMux()
 
 	// adding the handlers for certain endpoints to the multiplexer
-	mux.HandleFunc("GET /readiness", ReadinessHandler)
-	mux.HandleFunc("GET /errors", ErrorHandler)
+	mux.HandleFunc("GET /readiness", handler.ReadinessHandler)
+	mux.HandleFunc("GET /errors", handler.ErrorHandler)
 
 	//Getting the default table values
-	mux.HandleFunc("GET /default", config.GetAllDefaultTables)
+	mux.HandleFunc("GET /default", handlerConfig.GetAllDefaultTables)
 
 	//Creating th server Struct with the port as adress and the multiplexer as our handler
 	server := &http.Server{

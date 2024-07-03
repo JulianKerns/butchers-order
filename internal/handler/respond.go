@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// Two really important helper functions that are used in every handler to give a appropriate response to the client
+// Two really important helper functions that are used in every handler to give an appropriate response to the client
 
 func respondWithError(w http.ResponseWriter, code int, msg string) {
 	if code > 499 {
