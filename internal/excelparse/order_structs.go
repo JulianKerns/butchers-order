@@ -14,15 +14,18 @@ type TypeOfMeat struct {
 }
 
 type Rindfleisch struct {
-	Meats map[string]TypeOfMeat
+	Meats  map[string]TypeOfMeat
+	Animal string
 }
 
 type Schwein struct {
-	Meats map[string]TypeOfMeat
+	Meats  map[string]TypeOfMeat
+	Animal string
 }
 
 type SurSchwein struct {
-	Meats map[string]TypeOfMeat
+	Meats  map[string]TypeOfMeat
+	Animal string
 }
 
 func (r Rindfleisch) Print() {

@@ -23,9 +23,9 @@ func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
 		fmt.Printf("could not read the rows: %v", err)
 	}
 	// initializing Meat structs
-	tableRind := &Rindfleisch{Meats: make(map[string]TypeOfMeat)}
-	tableSchwein := &Schwein{Meats: make(map[string]TypeOfMeat)}
-	tableSurSchwein := &SurSchwein{Meats: make(map[string]TypeOfMeat)}
+	tableRind := &Rindfleisch{Meats: make(map[string]TypeOfMeat), Animal: "Beef"}
+	tableSchwein := &Schwein{Meats: make(map[string]TypeOfMeat), Animal: "Pork"}
+	tableSurSchwein := &SurSchwein{Meats: make(map[string]TypeOfMeat), Animal: "SaltedPork"}
 
 	//setting the rindfleisch table
 	for i := 2; i < 20; i++ {

@@ -8,6 +8,9 @@ CREATE TABLE orders(
     meatcut TEXT NOT NULL,
     price FLOAT NOT NULL,
     quantitiy FLOAT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (meatcut) REFERENCES (id) ON DELETE CASCADE,
+    UNIQUE(user_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- +goose Down
+DROP TABLE orders;

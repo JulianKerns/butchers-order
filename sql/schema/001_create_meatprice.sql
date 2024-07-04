@@ -1,30 +1,12 @@
 -- +goose Up
-CREATE TABLE beef(
+CREATE TABLE meatprices(
     id TEXT PRIMARY KEY,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    meatcut TEXT UNIQUE NOT NULL,
-    price FLOAT NOT NULL,
-    quantitiy FLOAT
-);
-CREATE TABLE pork(
-    id TEXT PRIMARY KEY,
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL,
-    meatcut TEXT UNIQUE NOT NULL,
-    price FLOAT NOT NULL,
-    quantitiy FLOAT
-);
-CREATE TABLE saltedpork(
-    id TEXT PRIMARY KEY,
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL,
-    meatcut TEXT UNIQUE NOT NULL,
-    price FLOAT NOT NULL,
-    quantitiy FLOAT
+    meat_source TEXT NOT NULL,
+    meatcut TEXT NOT NULL,
+    price FLOAT NOT NULL
 );
 
 -- +goose Down
-DROP TABLE beef;
-DROP TABLE pork;
-DROP TABLE saltedpork;
+DROP TABLE meatprices;

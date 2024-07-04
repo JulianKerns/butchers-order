@@ -9,6 +9,40 @@ import (
 	"context"
 )
 
+const createAdminUser = `-- name: CreateAdminUser :one
+INSERT INTO users(id, created_at, updated_at, username, email, is_admin)
+VALUES($1,$2,$3,$4,$5,true)
+RETURNING id, created_at, updated_at, username, email, is_admin
+`
+
+type CreateAdminUserParams struct {
+	ID        string
+	CreatedAt string
+	UpdatedAt string
+	Username  string
+	Email     string
+}
+
+func (q *Queries) CreateAdminUser(ctx context.Context, arg CreateAdminUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, createAdminUser,
+		arg.ID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
+		arg.Username,
+		arg.Email,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Username,
+		&i.Email,
+		&i.IsAdmin,
+	)
+	return i, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO users(id, created_at, updated_at, username, email, is_admin)
 VALUES($1,$2,$3,$4,$5,false)

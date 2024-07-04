@@ -80,7 +80,7 @@ func main() {
 	mux.HandleFunc("GET /errors", handler.ErrorHandler)
 
 	//Getting the default table values
-	mux.HandleFunc("GET /default", handlerConfig.GetAllDefaultTables)
+	mux.HandleFunc("GET /default", handlerConfig.GetDefaultTables)
 
 	// Creating a User
 	mux.HandleFunc("POST /users", handlerConfig.HandlerCreateUser)
@@ -110,12 +110,13 @@ func (cfg *Config) SettingDefaulttablesvalues() {
 	// Setting the beef table
 	for _, value := range beef.Meats {
 
-		_, err := cfg.DB.AddingDefaultBeef(context.Background(), database.AddingDefaultBeefParams{
-			ID:        uuid.NewString(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			Meatcut:   value.Name,
-			Price:     value.PricePerKg,
+		_, err := cfg.DB.AddingDefaultMeatPrices(context.Background(), database.AddingDefaultMeatPricesParams{
+			ID:         uuid.NewString(),
+			CreatedAt:  now,
+			UpdatedAt:  now,
+			MeatSource: beef.Animal,
+			Meatcut:    value.Name,
+			Price:      value.PricePerKg,
 		})
 		if err != nil {
 			log.Printf("Database error: %v\n", err)
@@ -125,12 +126,13 @@ func (cfg *Config) SettingDefaulttablesvalues() {
 	// Setting the pork table
 	for _, value := range pork.Meats {
 		now := time.Now().Format(time.DateTime)
-		_, err := cfg.DB.AddingDefaultPork(context.Background(), database.AddingDefaultPorkParams{
-			ID:        uuid.NewString(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			Meatcut:   value.Name,
-			Price:     value.PricePerKg,
+		_, err := cfg.DB.AddingDefaultMeatPrices(context.Background(), database.AddingDefaultMeatPricesParams{
+			ID:         uuid.NewString(),
+			CreatedAt:  now,
+			UpdatedAt:  now,
+			MeatSource: pork.Animal,
+			Meatcut:    value.Name,
+			Price:      value.PricePerKg,
 		})
 		if err != nil {
 			log.Printf("Database error: %v\n", err)
@@ -140,12 +142,13 @@ func (cfg *Config) SettingDefaulttablesvalues() {
 	// Setting the saltedpork table
 	for _, value := range saltedpork.Meats {
 		now := time.Now().Format(time.DateTime)
-		_, err := cfg.DB.AddingDefaultSaltedPork(context.Background(), database.AddingDefaultSaltedPorkParams{
-			ID:        uuid.NewString(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			Meatcut:   value.Name,
-			Price:     value.PricePerKg,
+		_, err := cfg.DB.AddingDefaultMeatPrices(context.Background(), database.AddingDefaultMeatPricesParams{
+			ID:         uuid.NewString(),
+			CreatedAt:  now,
+			UpdatedAt:  now,
+			MeatSource: saltedpork.Animal,
+			Meatcut:    value.Name,
+			Price:      value.PricePerKg,
 		})
 		if err != nil {
 			log.Printf("Database error: %v\n", err)
