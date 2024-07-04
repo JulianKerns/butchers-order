@@ -10,6 +10,7 @@ type User struct {
 	UpdatedAt string `json:"updated_at"`
 	Username  string `json:"username"`
 	Email     string `json:"email"`
+	IsAdmin   bool   `json:"is_admin"`
 }
 
 func DatabaseUsertoUser(user database.User) User {
@@ -19,5 +20,6 @@ func DatabaseUsertoUser(user database.User) User {
 		UpdatedAt: user.UpdatedAt,
 		Username:  user.Username,
 		Email:     user.Email,
+		IsAdmin:   user.IsAdmin,
 	}
 }

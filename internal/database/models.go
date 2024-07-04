@@ -41,4 +41,5 @@ type User struct {
 	UpdatedAt string
 	Username  string
 	Email     string
+	IsAdmin   bool
 }

@@ -10,9 +10,9 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users(id, created_at, updated_at, username, email)
-VALUES($1,$2,$3,$4,$5)
-RETURNING id, created_at, updated_at, username, email
+INSERT INTO users(id, created_at, updated_at, username, email, is_admin)
+VALUES($1,$2,$3,$4,$5,false)
+RETURNING id, created_at, updated_at, username, email, is_admin
 `
 
 type CreateUserParams struct {
@@ -38,6 +38,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.UpdatedAt,
 		&i.Username,
 		&i.Email,
+		&i.IsAdmin,
 	)
 	return i, err
 }
