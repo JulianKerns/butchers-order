@@ -39,6 +39,7 @@ func (cfg *HandlerConfig) HandlerPOSTOrder(w http.ResponseWriter, r *http.Reques
 		MeatSource: params.MeatSource,
 		Meatcut:    params.Meatcut,
 		Price:      params.Price,
+		Quantitiy:  params.Quantitiy,
 	})
 
 	if err != nil {

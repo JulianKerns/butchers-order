@@ -85,6 +85,9 @@ func main() {
 	// Creating a User
 	mux.HandleFunc("POST /users", handlerConfig.HandlerCreateUser)
 
+	// Making an Order
+	mux.HandleFunc("POST /orders", handlerConfig.HandlerPOSTOrder)
+
 	//Creating th server Struct with the port as adress and the multiplexer as our handler
 	server := &http.Server{
 		Addr:              ":" + port,
