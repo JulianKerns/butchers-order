@@ -5,3 +5,6 @@ RETURNING *;
 
 -- name: GetAllDefaultMeatPrices :many
 SELECT * FROM meatprices;
+
+-- name: DeleteAllEntries :exec
+DELETE FROM meatprices;

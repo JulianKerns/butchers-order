@@ -4,8 +4,10 @@ import (
 	"fmt"
 )
 
-type Meat interface {
-	Print()
+type Meats struct {
+	Beef       Rindfleisch
+	Pork       Schwein
+	SaltedPork SurSchwein
 }
 
 type TypeOfMeat struct {

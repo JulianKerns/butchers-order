@@ -1,13 +1,15 @@
 package main
 
+import (
+	"fmt"
+)
+
 func main() {
 
-	rind, schwein, surschwein, err := ParsingExcelFile()
+	meat, err := ParsingExcelFile()
 
 	if err != nil {
 		return
 	}
-	rind.Print()
-	schwein.Print()
-	surschwein.Print()
+	fmt.Println(meat)
 }

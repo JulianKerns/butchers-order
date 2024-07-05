@@ -9,7 +9,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
+func ParsingExcelFile(path string) (Meats, error) {
 	// opening the excel file
 	file, err := excelize.OpenFile(path, excelize.Options{})
 	if err != nil {
@@ -31,7 +31,7 @@ func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
 	for i := 2; i < 20; i++ {
 		strippedPrice, err := stripPrice((rows[i][1]))
 		if err != nil {
-			return Rindfleisch{}, Schwein{}, SurSchwein{}, err
+			return Meats{}, err
 		}
 		specificOrder := TypeOfMeat{
 			Name:       stripNameWhitespaces(rows[i][0]),
@@ -44,7 +44,7 @@ func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
 	for i := 2; i < 14; i++ {
 		strippedPrice, err := stripPrice((rows[i][5]))
 		if err != nil {
-			return Rindfleisch{}, Schwein{}, SurSchwein{}, err
+			return Meats{}, err
 		}
 		specificOrder := TypeOfMeat{
 			Name:       stripNameWhitespaces(rows[i][4]),
@@ -58,7 +58,7 @@ func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
 	for i := 16; i < 19; i++ {
 		strippedPrice, err := stripPrice((rows[i][5]))
 		if err != nil {
-			return Rindfleisch{}, Schwein{}, SurSchwein{}, err
+			return Meats{}, err
 		}
 		specificOrder := TypeOfMeat{
 			Name:       stripNameWhitespaces(rows[i][4]),
@@ -67,7 +67,13 @@ func ParsingExcelFile(path string) (Rindfleisch, Schwein, SurSchwein, error) {
 		tableSurSchwein.Meats[stripNameWhitespaces(rows[i][4])] = specificOrder
 
 	}
-	return *tableRind, *tableSchwein, *tableSurSchwein, nil
+	// Setting the meat struct
+	meat := Meats{
+		Beef:       *tableRind,
+		Pork:       *tableSchwein,
+		SaltedPork: *tableSurSchwein,
+	}
+	return meat, nil
 }
 
 func stripPrice(price string) (float64, error) {

@@ -45,6 +45,15 @@ func (q *Queries) AddingDefaultMeatPrices(ctx context.Context, arg AddingDefault
 	return i, err
 }
 
+const deleteAllEntries = `-- name: DeleteAllEntries :exec
+DELETE FROM meatprices
+`
+
+func (q *Queries) DeleteAllEntries(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, deleteAllEntries)
+	return err
+}
+
 const getAllDefaultMeatPrices = `-- name: GetAllDefaultMeatPrices :many
 SELECT id, created_at, updated_at, meat_source, meatcut, price FROM meatprices
 `
