@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"log"
 	"net/http"
@@ -15,13 +14,12 @@ import (
 	"github.com/JulianKerns/butchers-order/internal/excelparse"
 	"github.com/JulianKerns/butchers-order/internal/handler"
 
-	"github.com/google/uuid"
-
 	_ "github.com/lib/pq"
 )
 
-type Config struct {
-	DB *database.Queries
+type excelConfig struct {
+	DB           *database.Queries
+	CurrentMeats *excelparse.Meats
 }
 
 func main() {
@@ -62,13 +60,20 @@ func main() {
 	handlerConfig := handler.GetHandlerConfig()
 	handlerConfig.DB = dbQueries
 
-	config := Config{
-		DB: dbQueries,
+	// getting the current Meatprices we use from the excelfile
+	meats := GetDefaultMeatPrices()
+	excelconfig := excelConfig{
+		DB:           dbQueries,
+		CurrentMeats: &meats,
 	}
 
 	// Using the Configs DBconnection to insert default values in the table
 	if newDefaultDB == "true" {
-		config.SettingDefaulttablesvalues()
+		err := excelconfig.DeleteAllMeatprices()
+		if err != nil {
+			log.Fatalf("DatabaseError: %v", err)
+		}
+		excelconfig.SettingDefaulttablesvalues()
 		log.Println("Setting new default table values")
 	}
 
@@ -80,10 +85,13 @@ func main() {
 	mux.HandleFunc("GET /errors", handler.ErrorHandler)
 
 	//Getting the default table values
-	mux.HandleFunc("GET /default", handlerConfig.GetAllDefaultTables)
+	mux.HandleFunc("GET /default", handlerConfig.GetDefaultTables)
 
 	// Creating a User
 	mux.HandleFunc("POST /users", handlerConfig.HandlerCreateUser)
+
+	// Making an Order
+	mux.HandleFunc("POST /orders", handlerConfig.HandlerPOSTOrder)
 
 	//Creating th server Struct with the port as adress and the multiplexer as our handler
 	server := &http.Server{
@@ -95,62 +103,5 @@ func main() {
 	//Staring up the Server
 	log.Printf("Serving on Port: %s", port)
 	log.Fatal(server.ListenAndServe())
-
-}
-
-func (cfg *Config) SettingDefaulttablesvalues() {
-	// Getting the data from the excelfile
-	beef, pork, saltedpork, err := excelparse.ParsingExcelFile("internal/excelparse/order_list.xlsx")
-	if err != nil {
-		log.Println("could not parse the excel file")
-		return
-	}
-	now := time.Now().Format(time.DateTime)
-
-	// Setting the beef table
-	for _, value := range beef.Meats {
-
-		_, err := cfg.DB.AddingDefaultBeef(context.Background(), database.AddingDefaultBeefParams{
-			ID:        uuid.NewString(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			Meatcut:   value.Name,
-			Price:     value.PricePerKg,
-		})
-		if err != nil {
-			log.Printf("Database error: %v\n", err)
-			return
-		}
-	}
-	// Setting the pork table
-	for _, value := range pork.Meats {
-		now := time.Now().Format(time.DateTime)
-		_, err := cfg.DB.AddingDefaultPork(context.Background(), database.AddingDefaultPorkParams{
-			ID:        uuid.NewString(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			Meatcut:   value.Name,
-			Price:     value.PricePerKg,
-		})
-		if err != nil {
-			log.Printf("Database error: %v\n", err)
-			return
-		}
-	}
-	// Setting the saltedpork table
-	for _, value := range saltedpork.Meats {
-		now := time.Now().Format(time.DateTime)
-		_, err := cfg.DB.AddingDefaultSaltedPork(context.Background(), database.AddingDefaultSaltedPorkParams{
-			ID:        uuid.NewString(),
-			CreatedAt: now,
-			UpdatedAt: now,
-			Meatcut:   value.Name,
-			Price:     value.PricePerKg,
-		})
-		if err != nil {
-			log.Printf("Database error: %v\n", err)
-			return
-		}
-	}
 
 }

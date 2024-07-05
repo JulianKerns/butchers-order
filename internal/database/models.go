@@ -4,35 +4,24 @@
 
 package database
 
-import (
-	"database/sql"
-)
-
-type Beef struct {
-	ID        string
-	CreatedAt string
-	UpdatedAt string
-	Meatcut   string
-	Price     float64
-	Quantitiy sql.NullFloat64
+type Meatprice struct {
+	ID         string
+	CreatedAt  string
+	UpdatedAt  string
+	MeatSource string
+	Meatcut    string
+	Price      float64
 }
 
-type Pork struct {
-	ID        string
-	CreatedAt string
-	UpdatedAt string
-	Meatcut   string
-	Price     float64
-	Quantitiy sql.NullFloat64
-}
-
-type Saltedpork struct {
-	ID        string
-	CreatedAt string
-	UpdatedAt string
-	Meatcut   string
-	Price     float64
-	Quantitiy sql.NullFloat64
+type Order struct {
+	ID         string
+	CreatedAt  string
+	UpdatedAt  string
+	UserID     string
+	MeatSource string
+	Meatcut    string
+	Price      float64
+	Quantitiy  float64
 }
 
 type User struct {
