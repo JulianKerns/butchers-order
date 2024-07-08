@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 
 	"time"
 
+	"github.com/JulianKerns/butchers-order/internal/auth"
 	"github.com/JulianKerns/butchers-order/internal/database"
 	"github.com/JulianKerns/butchers-order/internal/excelparse"
 	"github.com/JulianKerns/butchers-order/internal/handler"
@@ -29,7 +31,7 @@ func main() {
 		log.Printf("Error: %s\n", errLoadEnv)
 		return
 	}
-	// extrcating the value of the PORT and DB_Connetion key in the .env file
+	// extrcating the values of the .env file
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Println("Could not retrieve the environment variables")
@@ -47,6 +49,12 @@ func main() {
 		return
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Println("Could not retrieve the environment variables")
+		return
+	}
+
 	//Setting up the database connection
 	db, err := sql.Open("postgres", databaseConnection)
 	if err != nil {
@@ -56,9 +64,11 @@ func main() {
 	//setting up the queries for sqlc
 	dbQueries := database.New(db)
 
-	//Setting the GeneralConfig and the handler config to use the same db queries pointer
+	//Setting all the Configs(excelparse, handler)
 	handlerConfig := handler.GetHandlerConfig()
 	handlerConfig.DB = dbQueries
+	authConfig := auth.GetAuthConfig()
+	authConfig.JWTSecret = jwtSecret
 
 	// getting the current Meatprices we use from the excelfile
 	meats := GetDefaultMeatPrices()
@@ -76,6 +86,12 @@ func main() {
 		excelconfig.SettingDefaulttablesvalues()
 		log.Println("Setting new default table values")
 	}
+	// Testing the JWT token generation
+	token, errToken := authConfig.GenerateJWTToken(time.Minute, "5")
+	if errToken != nil {
+		log.Printf("%v\n", errToken)
+	}
+	fmt.Printf("Token: %v\n", token)
 
 	// Spinning up a new Multiplexer that handles the requests and directs the traffic to the different handlers
 	mux := http.NewServeMux()
