@@ -33,3 +33,20 @@ func (cfg *AuthConfig) GenerateJWTToken(expiresAfter time.Duration, userID strin
 	}
 	return signedToken, nil
 }
+
+func (cfg *AuthConfig) verifyToken(stringToken string) (*jwt.Token, error) {
+	verifiedToken, err := jwt.ParseWithClaims(stringToken, jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(cfg.JWTSecret), nil
+	})
+	if err != nil {
+		log.Printf("Error: %v", err)
+		return nil, err
+	}
+
+	if !verifiedToken.Valid {
+		log.Println("Token is not valid")
+		return nil, errors.New("the presented token is not valid")
+	}
+	return verifiedToken, nil
+
+}
