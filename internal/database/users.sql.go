@@ -7,12 +7,13 @@ package database
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createAdminUser = `-- name: CreateAdminUser :one
 INSERT INTO users(id, created_at, updated_at, username, email, is_admin)
 VALUES($1,$2,$3,$4,$5,true)
-RETURNING id, created_at, updated_at, username, email, is_admin
+RETURNING id, created_at, updated_at, username, email, is_admin, login_token
 `
 
 type CreateAdminUserParams struct {
@@ -39,6 +40,7 @@ func (q *Queries) CreateAdminUser(ctx context.Context, arg CreateAdminUserParams
 		&i.Username,
 		&i.Email,
 		&i.IsAdmin,
+		&i.LoginToken,
 	)
 	return i, err
 }
@@ -46,7 +48,7 @@ func (q *Queries) CreateAdminUser(ctx context.Context, arg CreateAdminUserParams
 const createUser = `-- name: CreateUser :one
 INSERT INTO users(id, created_at, updated_at, username, email, is_admin)
 VALUES($1,$2,$3,$4,$5,false)
-RETURNING id, created_at, updated_at, username, email, is_admin
+RETURNING id, created_at, updated_at, username, email, is_admin, login_token
 `
 
 type CreateUserParams struct {
@@ -73,6 +75,43 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Username,
 		&i.Email,
 		&i.IsAdmin,
+		&i.LoginToken,
 	)
 	return i, err
+}
+
+const deletingLoginToken = `-- name: DeletingLoginToken :exec
+UPDATE users SET login_token = NULL
+WHERE id = $1
+`
+
+func (q *Queries) DeletingLoginToken(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, deletingLoginToken, id)
+	return err
+}
+
+const getUserID = `-- name: GetUserID :one
+SELECT id FROM users WHERE email = $1
+`
+
+func (q *Queries) GetUserID(ctx context.Context, email string) (string, error) {
+	row := q.db.QueryRowContext(ctx, getUserID, email)
+	var id string
+	err := row.Scan(&id)
+	return id, err
+}
+
+const storingLoginToken = `-- name: StoringLoginToken :exec
+UPDATE users SET login_token = $2
+WHERE id = $1
+`
+
+type StoringLoginTokenParams struct {
+	ID         string
+	LoginToken sql.NullString
+}
+
+func (q *Queries) StoringLoginToken(ctx context.Context, arg StoringLoginTokenParams) error {
+	_, err := q.db.ExecContext(ctx, storingLoginToken, arg.ID, arg.LoginToken)
+	return err
 }

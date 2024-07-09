@@ -4,6 +4,10 @@
 
 package database
 
+import (
+	"database/sql"
+)
+
 type Meatprice struct {
 	ID         string
 	CreatedAt  string
@@ -25,10 +29,11 @@ type Order struct {
 }
 
 type User struct {
-	ID        string
-	CreatedAt string
-	UpdatedAt string
-	Username  string
-	Email     string
-	IsAdmin   bool
+	ID         string
+	CreatedAt  string
+	UpdatedAt  string
+	Username   string
+	Email      string
+	IsAdmin    bool
+	LoginToken sql.NullString
 }

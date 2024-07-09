@@ -5,7 +5,8 @@ CREATE TABLE users(
     updated_at TEXT NOT NULL,
     username TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    is_admin BOOLEAN NOT NULL
+    is_admin BOOLEAN NOT NULL,
+    login_token TEXT
 );
 
 -- +goose Down
